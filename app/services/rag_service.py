@@ -21,20 +21,32 @@ class RAGService:
 
         functions = investigation["functions"]
         sources = investigation["sources"]
+        relationships = investigation["relationships"]
 
         context = ""
 
         for function in functions:
 
             context += f"""
-Function:
-{function['function_name']}
+        Function:
+        {function['function_name']}
 
-Code:
-{function['content']}
+        File:
+        {function['file_path']}
 
---------------------
-"""
+        Code:
+        {function['content']}
+
+        --------------------
+        """
+        context += "\nRelationships:\n\n"
+
+        for caller, callees in relationships.items():
+
+            context += (
+                f"{caller} -> "
+                f"{', '.join(callees)}\n"
+            )
 
         prompt = f"""
 You are an expert Go software engineer.

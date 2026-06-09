@@ -111,8 +111,6 @@ rag_service = RAGService()
 
 @router.get("/ask")
 def ask(q: str):
-    answer = rag_service.ask(q)
+    return rag_service.ask(q)
 
-    return {
-        "answer": answer
-    }
+    

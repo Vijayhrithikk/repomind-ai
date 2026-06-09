@@ -1,8 +1,12 @@
 from app.retrieval.search import search
 from app.tools.function_tools import read_function
+from app.graph.repository import GraphRepository
 
 
 class RepositoryExplorer:
+
+    def __init__(self):
+        self.graph = GraphRepository()
 
     def investigate(
         self,
@@ -15,6 +19,7 @@ class RepositoryExplorer:
         )
 
         findings = []
+        seen = set()
 
         for result in results:
 
@@ -24,12 +29,59 @@ class RepositoryExplorer:
                 function_name
             )
 
-            if function:
+            if (
+                function and
+                function["function_name"] not in seen
+            ):
+
                 findings.append(
                     function
                 )
 
+                seen.add(
+                    function["function_name"]
+                )
+
+            related_functions = self.graph.get_calls(
+                function_name
+            )
+
+            for callee in related_functions:
+
+                related_function = read_function(
+                    callee
+                )
+
+                if (
+                    related_function and
+                    related_function["function_name"] not in seen
+                ):
+
+                    findings.append(
+                        related_function
+                    )
+
+                    seen.add(
+                        related_function["function_name"]
+                    )
+
+        print(
+            [
+                f["function_name"]
+                for f in findings
+            ]
+        )
+        relationships = {}
+        related_functions = self.graph.get_calls(function_name)
+
+        relationships[
+            function_name
+        ] = related_functions
         return {
-                "functions": findings,
-                "sources": [f["function_name"] for f in findings]
-                }
+            "functions": findings,
+            "sources": [
+                f["function_name"]
+                for f in findings
+            ],
+            "relationships": relationships
+        }
