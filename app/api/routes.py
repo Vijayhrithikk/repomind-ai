@@ -170,3 +170,19 @@ def explain(
     return explain_service.explain(
         name
     )
+
+#comparison
+from app.services.compare_service import (
+    CompareService,
+)
+
+compare_service = CompareService()
+@router.get("/compare")
+def compare(
+    func1: str,
+    func2: str,
+):
+    return compare_service.compare(
+        func1,
+        func2,
+    )
