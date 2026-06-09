@@ -1,6 +1,7 @@
 from app.retrieval.search import search
 from app.tools.function_tools import read_function
 from app.graph.repository import GraphRepository
+from app.retrieval.hybrid_search import hybrid_search
 
 
 class RepositoryExplorer:
@@ -13,10 +14,7 @@ class RepositoryExplorer:
         query: str,
     ):
 
-        results = search(
-            query,
-            limit=5,
-        )
+        results = hybrid_search(query,limit=10,)
 
         findings = []
         seen = set()

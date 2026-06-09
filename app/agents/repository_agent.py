@@ -30,6 +30,9 @@ class RepositoryAgent:
 
         entity = self.extractor.extract(question)
         print("Entity: ", entity)
+        target = entity.get("function")
+        if not target:
+            target = "authentication"
 
         results = {}
 
@@ -38,20 +41,20 @@ class RepositoryAgent:
             if tool == "trace":
 
                 results["trace"] = (
-                    trace_tool.deep_trace(entity["function"])
+                    trace_tool.deep_trace(target)
                 )
 
             elif tool == "explain":
 
                 results["explain"] = (
-                    explain_tool.explain(entity["function"])
+                    explain_tool.explain(target)
                 )
 
             elif tool == "security_review":
                 
 
                 results["security_review"] = (
-                    security_tool.review(entity["function"])
+                    security_tool.review(target)
                 )
 
             elif tool == "rag":

@@ -45,9 +45,9 @@ class Planner:
         """
 
         response = self.gemini.generate(prompt)
-        print("Plan:",response)
 
         response=self.clean_json(response)
+        print("Plan:",response)
 
         try:
             return json.loads(response)
