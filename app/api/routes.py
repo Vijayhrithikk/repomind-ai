@@ -114,3 +114,35 @@ def ask(q: str):
     return rag_service.ask(q)
 
     
+#summarize tool
+from app.services.repository_summary import (
+    RepositorySummaryService,
+)
+
+summary_service = RepositorySummaryService()
+
+@router.get("/summary")
+def summary():
+
+    investigation = explorer.investigate(
+        "application architecture"
+    )
+
+    return {
+        "summary": summary_service.summarize(
+            investigation["functions"]
+        )
+    }
+
+#trace service
+from app.services.trace_service import (
+    TraceService,
+)
+
+trace_service = TraceService()
+
+@router.get("/trace")
+def trace(
+    q: str
+):
+    return trace_service.trace(q)
