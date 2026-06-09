@@ -200,18 +200,16 @@ def security_review():
         "review": security_service.review()
     }
 
-#agents, hehe
 
-from app.services.agent import (
-    AgentService,
+
+#agents 
+
+from app.agents.repository_agent import (
+    RepositoryAgent,
 )
 
-agent_service = AgentService()
+repository_agent = RepositoryAgent()
 
 @router.get("/agent")
-def agent(
-    q: str
-):
-    return agent_service.run(
-        q
-    )
+def agent(q: str):
+    return repository_agent.run(q)
