@@ -186,3 +186,16 @@ def compare(
         func1,
         func2,
     )
+
+#security_pr
+from app.services.security_review import (
+    SecurityReviewService,
+)
+
+security_service = SecurityReviewService()
+
+@router.get("/security-review")
+def security_review():
+    return {
+        "review": security_service.review()
+    }
