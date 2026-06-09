@@ -199,3 +199,19 @@ def security_review():
     return {
         "review": security_service.review()
     }
+
+#agents, hehe
+
+from app.services.agent import (
+    AgentService,
+)
+
+agent_service = AgentService()
+
+@router.get("/agent")
+def agent(
+    q: str
+):
+    return agent_service.run(
+        q
+    )
