@@ -6,6 +6,7 @@ CALL_PATTERN = re.compile(
 )
 
 IGNORE_CALLS = {
+    "New",
     "JSON",
     "Abort",
     "Set",

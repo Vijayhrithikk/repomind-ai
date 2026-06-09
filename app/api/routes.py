@@ -146,3 +146,12 @@ def trace(
     q: str
 ):
     return trace_service.trace(q)
+
+#deep trace
+@router.get("/trace/deep")
+def deep_trace(
+    name: str
+):
+    return trace_service.deep_trace(
+        name
+    )
