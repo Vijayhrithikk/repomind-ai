@@ -1,3 +1,9 @@
+from app.agents.planner import Planner
+from app.agents.synthesizer import Synthesizer
+from app.agents.entity_extractor import (
+    EntityExtractor,
+)
+
 from app.agents.tools import (
     trace_tool,
     explain_tool,
@@ -8,59 +14,63 @@ from app.agents.tools import (
 
 class RepositoryAgent:
 
+    def __init__(self):
+
+        self.planner = Planner()
+
+        self.synthesizer = Synthesizer()
+        self.extractor= EntityExtractor()
+
     def run(
         self,
         question: str,
     ):
 
-        q = question.lower()
+        plan = self.planner.plan(question)
 
-        if (
-            "security" in q
-            and
-            "authentication" in q
-        ):
+        entity = self.extractor.extract(question)
+        print("Entity: ", entity)
 
-            trace = trace_tool.deep_trace("Login")
+        results = {}
 
-            explanation = (
-                explain_tool.explain("Login")
+        for tool in plan["tools"]:
+
+            if tool == "trace":
+
+                results["trace"] = (
+                    trace_tool.deep_trace(entity["function"])
+                )
+
+            elif tool == "explain":
+
+                results["explain"] = (
+                    explain_tool.explain(entity["function"])
+                )
+
+            elif tool == "security_review":
+                
+
+                results["security_review"] = (
+                    security_tool.review(entity["function"])
+                )
+
+            elif tool == "rag":
+
+                results["rag"] = (
+                    rag_tool.ask(
+                        question
+                    )
+                )
+
+        answer = (
+            self.synthesizer.synthesize(
+                question,
+                results,
             )
-
-            review = (
-                security_tool.review()
-            )
-
-            return {
-                "workflow": [
-                    "trace",
-                    "explain",
-                    "security_review",
-                ],
-                "trace": trace,
-                "explanation": explanation,
-                "security_review": review,
-            }
-
-        if "trace" in q:
-
-            function_name = (question.replace("trace", "").strip())
-
-            return {
-                "workflow": ["trace",],
-                "result": trace_tool.deep_trace(function_name),
-            }
-
-        if "explain" in q:
-
-            function_name = (question.replace("explain", "").strip())
-
-            return {
-                "workflow": ["explain",],
-                "result": explain_tool.explain(function_name),
-            }
+        )
 
         return {
-            "workflow": ["rag",],
-            "result": rag_tool.ask(question),
+            "plan": plan,
+            "answer": answer,
+            "tool_results": results,
         }

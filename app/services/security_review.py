@@ -10,11 +10,9 @@ class SecurityReviewService:
         self.gemini = GeminiClient()
         self.explorer = RepositoryExplorer()
 
-    def review(self):
+    def review(self,target:str="authentication"):
 
-        investigation = self.explorer.investigate(
-            "authentication security jwt middleware password"
-        )
+        investigation = self.explorer.investigate(target)
 
         context = ""
 
@@ -56,6 +54,4 @@ Code:
 {context}
 """
 
-        return self.gemini.generate(
-            prompt
-        )
+        return self.gemini.generate(prompt)

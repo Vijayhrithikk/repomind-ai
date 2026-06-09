@@ -14,7 +14,7 @@ router = APIRouter()
 gemini = GeminiClient()
 repo_service= RepoService()
 
-
+#test gemini api
 @router.get("/test")
 def test():
     ans = gemini.generate("Explain Redis in one sentence")
@@ -23,6 +23,7 @@ def test():
         "answer": ans
     }
 
+#test repo clone
 @router.get("/repo/load")
 def load_repo():
     repo_path= repo_service.clone_repo("https://github.com/Vijayhrithikk/shortly")
@@ -33,7 +34,7 @@ def load_repo():
         "files": len(files)
     }
 
-
+#test repo clone and chunk
 @router.post("/repo/functions")
 def repo_functions():
 
@@ -58,6 +59,7 @@ def repo_functions():
         ]
     }
 
+#test repo retrieval,embed and save
 @router.post("/repo/index")
 def repo_index():
     repo_path = repo_service.clone_repo(
@@ -76,7 +78,8 @@ def repo_index():
 
         chunks.extend(extract_functions(str(file)))
     index_functions(chunks)
-    
+
+# test search
 @router.get("/search")
 def semantic_search(q: str):
     results = search(q)
@@ -213,3 +216,27 @@ repository_agent = RepositoryAgent()
 @router.get("/agent")
 def agent(q: str):
     return repository_agent.run(q)
+
+#test synthesizer
+
+from app.agents.synthesizer import Synthesizer
+s = Synthesizer()
+@router.get("/syn")
+def planners():
+    return s.synthesize(
+
+        "How secure is authentication?",
+        {
+            "trace": "Login -> GetUserByEmail",
+            "security_review": "Missing rate limiting",
+        },
+        )   
+    
+#test keyword
+from app.retrieval.keyword_search import keyword_search
+
+@router.get("/keyword")
+def keyword():
+    return {
+        "ans": keyword_search("Login")
+    }
