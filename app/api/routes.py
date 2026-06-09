@@ -233,10 +233,10 @@ def planners():
         )   
     
 #test keyword
-from app.retrieval.keyword_search import keyword_search
+from app.retrieval.hybrid_search import hybrid_search
 
-@router.get("/keyword")
+@router.get("/hybrid")
 def keyword():
     return {
-        "ans": keyword_search("Login")
+        "ans": hybrid_search("Login")
     }
