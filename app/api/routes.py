@@ -155,3 +155,18 @@ def deep_trace(
     return trace_service.deep_trace(
         name
     )
+
+#explain service 
+
+from app.services.explain_service import (
+    ExplainService,
+)
+explain_service = ExplainService()
+
+@router.get("/explain")
+def explain(
+    name: str
+):
+    return explain_service.explain(
+        name
+    )
