@@ -12,21 +12,44 @@ class EntityExtractor:
     ):
 
         prompt = f"""
-Extract the primary Go function name.
+        You are an extraction engine.
 
-Return ONLY JSON.
+        Determine whether the user is asking about:
 
-Example:
+        1. A Go function
+        2. A repository topic
 
-Question:
-Explain Login
+        Return ONLY JSON.
 
-Output:
-{{"function":"Login"}}
+        Examples:
 
-Question:
-{question}
-"""
+        Question:
+        Explain Login
+
+        Output:
+        {{"kind":"function","value":"Login"}}
+
+        Question:
+        Trace SignUp
+
+        Output:
+        {{"kind":"function","value":"SignUp"}}
+
+        Question:
+        How secure is authentication?
+
+        Output:
+        {{"kind":"topic","value":"authentication"}}
+
+        Question:
+        How does authorization work?
+
+        Output:
+        {{"kind":"topic","value":"authorization"}}
+
+        Question:
+        {question}
+        """
 
         response = self.gemini.generate(prompt)
 
@@ -43,5 +66,6 @@ Question:
             return json.loads(response)
         except:
             return {
-                "function": "Login"
+                "kind": "topic",
+                "value": question,
             }

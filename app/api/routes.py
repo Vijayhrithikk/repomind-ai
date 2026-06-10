@@ -240,3 +240,14 @@ def keyword():
     return {
         "ans": hybrid_search("Login")
     }
+
+#test entity extractor
+from app.agents.entity_extractor import EntityExtractor
+
+entity = EntityExtractor()
+
+@router.get("/en")
+def extractor():
+    return {
+        "ans": entity.extract("How secure is authentication")
+    }
