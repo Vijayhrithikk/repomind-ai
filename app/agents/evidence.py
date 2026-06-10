@@ -8,11 +8,25 @@ class Evidence:
     def add_observation(
         self,
         observation: str,
+        source: str = "unknown",
     ):
-        self.observations.append(observation)
+
+        self.observations.append(
+            {
+                "fact": observation,
+                "source": source,
+            }
+        )
 
     def add_unknown(
         self,
         unknown: str,
+        source: str = "unknown",
     ):
-        self.unknowns.append(unknown)
+
+        self.unknowns.append(
+            {
+                "fact": unknown,
+                "source": source,
+            }
+        )

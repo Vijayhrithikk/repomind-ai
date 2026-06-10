@@ -66,9 +66,9 @@ class RepositoryAgent:
 
                 for item in semantic:
 
-                    investigation.evidence.add_observation(item)
+                    investigation.evidence.add_observation(item, source="trace")
 
-                investigation.evidence.add_unknown("Security properties not verified")
+                investigation.evidence.add_unknown("Security properties not verified", source="trace",)
 
 
                 results["trace"] = (investigation.trace)
