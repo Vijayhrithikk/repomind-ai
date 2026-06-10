@@ -36,32 +36,47 @@ class RepositoryAgent:
         
         target = (value if value else question)
 
+        from app.agents.investigation import Investigation
+    
+        investigation = Investigation(
+            question=question,
+            target=target,
+        )
+
         results = {}
 
         for tool in plan["tools"]:
 
             if tool == "trace":
 
-                results["trace"] = (
-                    trace_tool.deep_trace(target)
-                )
+                investigation.trace = (trace_tool.deep_trace(target))
+
+                results["trace"] = (investigation.trace)
 
             elif tool == "explain":
 
-                results["explain"] = (
-                    explain_tool.explain(target)
-                )
+                investigation.explain = (explain_tool.explain(target))
+
+                results["explain"] = (investigation.explain)
 
             elif tool == "security_review":
-                
 
-                results["security_review"] = (security_tool.review(target))
+                investigation.security = (security_tool.review(target))
+
+                results["security_review"] = (investigation.security)
 
             elif tool == "rag":
 
-                results["rag"] = (rag_tool.ask(question))
+                investigation.rag = (rag_tool.ask(question))
+
+                results["rag"] = (investigation.rag)
+
+
             elif tool == "architecture":
-                results["architecture"] = architecture_tool.review(target)
+
+                investigation.architecture = (architecture_tool.review(target))
+
+                results["architecture"] = (investigation.architecture)
 
         answer = (
             self.synthesizer.synthesize(
