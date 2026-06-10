@@ -13,24 +13,42 @@ class Synthesizer:
         results: dict,
     ):
 
+        context = ""
+
+        for tool, result in results.items():
+
+            context += f"""
+
+        TOOL: {tool}
+
+        RESULT:
+        {result}
+
+        ----------------
+        """
+
         prompt = f"""
-You are a senior software architect.
+        You are a senior software architect.
 
-Question:
+        Question:
 
-{question}
+        {question}
 
-Tool Results:
+        Tool Results:
 
-{results}
+        {context}
 
-Generate a final answer.
+        Your task:
 
-Use the tool results.
+        1. Review all tool outputs.
+        2. Identify agreements and contradictions.
+        3. Combine findings into a single answer.
+        4. Prioritize repository-specific evidence.
+        5. If a security issue exists, mention it.
+        6. If architectural concerns exist, mention them.
+        7. If information is insufficient, say so.
 
-Be concise and practical.
-"""
+        Return a practical engineering answer.
+        """
 
-        return self.gemini.generate(
-            prompt
-        )
+        return self.gemini.generate(prompt)

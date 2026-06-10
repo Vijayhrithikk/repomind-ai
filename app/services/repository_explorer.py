@@ -1,7 +1,9 @@
 from app.tools.function_tools import read_function
 from app.graph.repository import GraphRepository
 from app.retrieval.hybrid_search import hybrid_search
-
+from app.services.trace_service import (
+    TraceService,
+)
 
 class RepositoryExplorer:
 

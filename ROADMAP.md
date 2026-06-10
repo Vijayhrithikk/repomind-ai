@@ -37,3 +37,14 @@ PHASE 5 - Autonomous Engineering
 ⬜ Patch Generation
 ⬜ Code Modification
 ⬜ Multi-Step Investigation
+
+PHASE 6 - Polyglot Repositories
+--------------------------------
+⬜ Python Parser
+⬜ TypeScript Parser
+⬜ Java Parser
+⬜ Markdown Parser
+⬜ YAML Parser
+⬜ Universal Chunk Model
+⬜ Multi-language Call Graph
+⬜ Cross-language Architecture Analysis
