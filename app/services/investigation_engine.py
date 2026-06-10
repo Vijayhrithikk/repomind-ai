@@ -7,7 +7,6 @@ class InvestigationEngine:
 
         steps = []
 
-        observations = (hypotheses.observations)
 
         texts = [
             item["hypothesis"].lower()
