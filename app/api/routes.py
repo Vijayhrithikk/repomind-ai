@@ -251,3 +251,14 @@ def extractor():
     return {
         "ans": entity.extract("How secure is authentication")
     }
+
+#test architecture
+from app.services.architecture import (
+    ArchitectureService,
+)
+
+architecture_service = (ArchitectureService())
+
+@router.get("/architecture")
+def architecture(topic: str = "authentication",):
+    return architecture_service.review(topic)
