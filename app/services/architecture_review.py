@@ -5,6 +5,7 @@ from app.services.system_mapper import (
     SystemMapper,
 )
 from app.services.flow_analyzer import FlowAnalyzer
+from app.services.ent_to_end_flow import EndToEndFlowService()
 
 
 class ArchitectureReviewService:
@@ -14,6 +15,7 @@ class ArchitectureReviewService:
         self.explorer = RepositoryExplorer()
         self.mapper = SystemMapper()
         self.flow_analyzer = FlowAnalyzer()
+        self.end_to_end= EndToEndFlowService()
 
     def review(
         self,
@@ -31,6 +33,13 @@ class ArchitectureReviewService:
         relationships = (investigation["relationships"])
 
         flows = self.flow_analyzer.analyze(relationships)
+
+        workflows = self.end_to_end.analyze(
+            {
+                "systems":systems ,
+                "flows": flows,
+            }
+        )
 
         layers = {
             "handlers": [],
@@ -66,6 +75,7 @@ class ArchitectureReviewService:
 
         return {
             "systems": systems,
+            "workflows": workflows,
             "layers": layers,
             "entrypoints": entrypoints,
             "flows": flows,
