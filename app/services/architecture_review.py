@@ -5,7 +5,7 @@ from app.services.system_mapper import (
     SystemMapper,
 )
 from app.services.flow_analyzer import FlowAnalyzer
-from app.services.ent_to_end_flow import EndToEndFlowService
+from app.services.end_to_end_flow import EndToEndFlowService
 from app.services.flow_cleaner import FlowCleaner
 
 
