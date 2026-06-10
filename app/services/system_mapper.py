@@ -27,7 +27,6 @@ class SystemMapper:
                 or "auth" in path
                 or "login" in name
                 or "signup" in name
-                or "user" in name
             ):
 
                 systems["authentication"].append(function["function_name"])

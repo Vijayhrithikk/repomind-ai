@@ -54,6 +54,11 @@ def extract_architecture_patterns(
         {},
     )
 
+    handlers = layers.get(
+        "handlers",
+        [],
+    )
+
     services = layers.get(
         "services",
         [],
@@ -61,11 +66,6 @@ def extract_architecture_patterns(
 
     repositories = layers.get(
         "repositories",
-        [],
-    )
-
-    handlers = layers.get(
-        "handlers",
         [],
     )
 
@@ -79,39 +79,70 @@ def extract_architecture_patterns(
             "Layered architecture detected"
         )
 
-    deps = architecture.get(
+    dependencies = architecture.get(
         "dependencies",
         [],
     )
 
-    if "Redis" in deps:
+    if "Redis" in dependencies:
 
         facts.append(
             "Caching infrastructure detected"
         )
 
-    if "JWT" in deps:
+    if "JWT" in dependencies:
 
-        facts.append("JWT authentication detected")
+        facts.append(
+            "JWT authentication detected"
+        )
 
-    flows = architecture.get(
-        "flows",
+    functions = architecture.get(
+        "functions",
         [],
     )
 
-    flow_text = str(flows).lower()
+    content = " ".join(
+        function.get(
+            "content",
+            "",
+        ).lower()
+        for function in functions
+    )
 
     if (
-        "getcache" in flow_text
-        and "setcache" in flow_text
+        "getcache" in content
+        and "setcache" in content
     ):
 
-        facts.append("Cache-aside pattern detected")
+        facts.append(
+            "Cache-aside pattern detected"
+        )
 
-    if ("pushanalyticsjob"
-        in flow_text
+    if (
+        "pushanalyticsjob"
+        in content
     ):
 
-        facts.append("Asynchronous processing detected")
+        facts.append(
+            "Asynchronous processing detected"
+        )
+
+    if (
+        "queryrow" in content
+        and "scan" in content
+    ):
+
+        facts.append(
+            "Repository pattern detected"
+        )
+
+    if (
+        "redirect(" in content
+        or "redirecturl" in content
+    ):
+
+        facts.append(
+            "HTTP redirect workflow detected"
+        )
 
     return facts

@@ -141,7 +141,7 @@ class ArchitectureReviewService:
                     "JWT"
                 )
 
-            if "redis" in content:
+            if "redis" or "setcache" in content:
 
                 dependencies.add(
                     "Redis"
@@ -162,6 +162,8 @@ class ArchitectureReviewService:
                 dependencies.add(
                     "PostgreSQL"
                 )
+            if "pushanalyticsjob" in content:
+                dependencies.add("Analytics Queue")
 
         return list(
             dependencies

@@ -118,7 +118,7 @@ class ToolExecutor:
             for pattern in patterns:
                 investigation.evidence.add_observation(pattern,source="architecture",confidence=0.90)
 
-            investigation.evidence.add_observation(
+            investigation.evidence.add_note(
                 f"Architecture review executed for {target}",
                 source="architecture",
                 confidence=1.0,
