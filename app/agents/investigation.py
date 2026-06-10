@@ -17,6 +17,7 @@ class Investigation:
         self.scalability = None
         self.rag = None
 
+        self.findings = []
         self.notes = []
         self.evidence = Evidence()
 
