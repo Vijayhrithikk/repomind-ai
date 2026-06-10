@@ -29,9 +29,13 @@ class RepositoryAgent:
         plan = self.planner.plan(question)
 
         entity = self.extractor.extract(question)
-        print("Entity: ", entity)
-        target = entity.get("function")
-        if not target:
+        kind = entity.get("kind")
+        value = entity.get("value")
+        print("Entity:", entity)
+        
+        if kind == "function":
+            target = value
+        else:
             target = "authentication"
 
         results = {}
