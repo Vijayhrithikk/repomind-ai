@@ -113,8 +113,9 @@ class RepositoryAgent:
             "plan": plan,
             "answer": answer,
             "tool_results": results,
-            "next_steps": next_steps,
             "findings": investigation.findings,
+            "hypotheses": investigation.hypotheses,
+            "next_steps": next_steps,
             "evidence": {
                 "observations": (
                     investigation.evidence.observations

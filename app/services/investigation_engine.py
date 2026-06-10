@@ -7,14 +7,13 @@ class InvestigationEngine:
 
         steps = []
 
-
         texts = [
             item["hypothesis"].lower()
             for item in hypotheses
         ]
 
         if (
-            "database dependency detected"
+            "database may become a scalability bottleneck during traffic spikes"
             in texts
         ):
 
@@ -27,7 +26,7 @@ class InvestigationEngine:
             )
 
         if (
-            "cache-aside pattern detected"
+            "cache hit rate is critical to system performance"
             in texts
         ):
 
@@ -35,7 +34,20 @@ class InvestigationEngine:
                 {
                     "tool": "architecture",
                     "target": "cache",
-                    "reason": "Validate cache-aside pattern hypothesis",
+                    "reason": "Validate cache effectiveness",
+                }
+            )
+
+        if (
+            "analytics failures should not impact redirect latency"
+            in texts
+        ):
+
+            steps.append(
+                {
+                    "tool": "architecture",
+                    "target": "analytics",
+                    "reason": "Validate analytics isolation",
                 }
             )
 
