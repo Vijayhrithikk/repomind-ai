@@ -48,3 +48,13 @@ PHASE 6 - Polyglot Repositories
 ⬜ Universal Chunk Model
 ⬜ Multi-language Call Graph
 ⬜ Cross-language Architecture Analysis
+
+
+evolution checkpoints, next
+
+{
+  "kind": "topic",
+  "value": "authentication",
+  "intent": "security"
+}
+

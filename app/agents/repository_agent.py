@@ -34,10 +34,7 @@ class RepositoryAgent:
         value = entity.get("value")
         print("Entity:", entity)
         
-        if kind == "function":
-            target = value
-        else:
-            target = "authentication"
+        target = (value if value else question)
 
         results = {}
 

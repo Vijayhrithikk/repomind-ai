@@ -52,6 +52,7 @@ class EntityExtractor:
         """
 
         response = self.gemini.generate(prompt)
+        print("Raw:", response)
 
         response = (
             response
@@ -63,9 +64,14 @@ class EntityExtractor:
         import json
 
         try:
-            return json.loads(response)
-        except:
+            entity= json.loads(response)
+            if("kind" not in entity or
+               "value" not in entity):
+                raise ValueError("missing field")
+            return entity 
+        except Exception as e:
+            print("Entity parse error:", e)
             return {
-                "kind": "topic",
+                "kind":"topic",
                 "value": question,
             }
