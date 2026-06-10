@@ -8,6 +8,8 @@ class Planner:
         self.gemini = GeminiClient()
 
     def plan(self,question: str,entity: dict):
+        print("Planning entity", entity)
+        
         prompt = f"""
         You are a repository agent planner.
 

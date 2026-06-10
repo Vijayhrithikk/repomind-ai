@@ -55,6 +55,9 @@ class RepositoryAgent:
             if tool == "trace":
 
                 investigation.trace = (trace_tool.deep_trace(target))
+                investigation.evidence.add_observation(f"Trace genrated for {target}")
+                investigation.evidence.add_observation(f"Root function: {target}")
+
 
                 results["trace"] = (investigation.trace)
 

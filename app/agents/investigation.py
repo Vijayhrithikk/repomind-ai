@@ -1,3 +1,4 @@
+from app.agents.evidence import Evidence
 class Investigation:
 
     def __init__(
@@ -15,6 +16,7 @@ class Investigation:
         self.rag = None
 
         self.notes = []
+        self.evidence = Evidence()
 
     def add_note(self,note: str,):
         self.notes.append(note)
