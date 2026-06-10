@@ -1,5 +1,8 @@
 from app.core.gemini import GeminiClient
 from app.agents.evidence import Evidence
+from app.agents.result_summarizer import (
+    summarize_result,
+)
 
 
 class Synthesizer:
@@ -20,20 +23,17 @@ class Synthesizer:
 
         for tool, result in results.items():
 
-            context += f"""
+            context += summarize_result(
+                tool,
+                result,
+            )
 
-TOOL:
-{tool}
-
-RESULT:
-{result}
-
-------------------------
-"""
+            context += "\n----------------\n"
 
         notes_text = ""
 
         if notes:
+
             notes_text = "\n".join(
                 f"- {note}"
                 for note in notes
@@ -43,8 +43,10 @@ RESULT:
         unknowns = []
 
         if evidence:
-            observations = evidence.observations
-            unknowns = evidence.unknowns
+
+            observations = (evidence.observations)
+
+            unknowns = (evidence.unknowns)
 
         prompt = f"""
 You are a senior software architect.
@@ -65,7 +67,7 @@ Investigation Notes:
 
 {notes_text}
 
-Tool Results:
+Tool Summaries:
 
 {context}
 
@@ -82,12 +84,10 @@ Rules:
 3. If evidence is insufficient,
    explicitly say so.
 
-4. Use tool results only to support
+4. Use tool summaries only to support
    observations and inferences.
 
 Return a practical engineering answer.
 """
 
-        return self.gemini.generate(
-            prompt
-        )
+        return self.gemini.generate(prompt)
