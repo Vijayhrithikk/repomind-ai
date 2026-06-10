@@ -31,3 +31,7 @@ architecture_tool = ArchitectureReviewService()
 from app.services.scalability_review import ScalabilityReviewService
 
 scalability_tool = ScalabilityReviewService()
+
+from app.services.risk_analyzer import RiskAnalyzer
+
+risk_tool = RiskAnalyzer()
