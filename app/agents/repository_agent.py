@@ -9,6 +9,7 @@ from app.agents.investigation import (
 from app.agents.tool_executer import (
     ToolExecutor,
 )
+from app.services.investigation_engine import InvestigationEngine
 
 
 class RepositoryAgent:
@@ -22,6 +23,8 @@ class RepositoryAgent:
         self.extractor = EntityExtractor()
 
         self.executor = ToolExecutor()
+
+        self.investigation_engine = InvestigationEngine()
 
     def run(
         self,
@@ -79,6 +82,8 @@ class RepositoryAgent:
 
         print("Architecture:",time.time()-start)
 
+        next_steps = self.investigation_engine.next_steps(investigation.evidence)
+
         start= time.time()
         answer = (
             self.synthesizer.synthesize(
@@ -94,6 +99,7 @@ class RepositoryAgent:
             "plan": plan,
             "answer": answer,
             "tool_results": results,
+            "next_steps": next_steps,
             "evidence": {
                 "observations": (
                     investigation.evidence.observations
