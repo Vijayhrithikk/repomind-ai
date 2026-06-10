@@ -1,4 +1,3 @@
-from app.retrieval.search import search
 from app.tools.function_tools import read_function
 from app.graph.repository import GraphRepository
 from app.retrieval.hybrid_search import hybrid_search
@@ -14,10 +13,15 @@ class RepositoryExplorer:
         query: str,
     ):
 
-        results = hybrid_search(query,limit=10,)
+        results = hybrid_search(
+            query,
+            limit=10,
+        )
 
         findings = []
         seen = set()
+
+        relationships = {}
 
         for result in results:
 
@@ -28,40 +32,34 @@ class RepositoryExplorer:
             )
 
             if (
-                function and
-                function["function_name"] not in seen
+                function
+                and function["function_name"] not in seen
             ):
 
-                findings.append(
-                    function
-                )
+                findings.append(function)
 
                 seen.add(
                     function["function_name"]
                 )
 
-            related_functions = self.graph.get_calls(
+            related_functions = self.graph.get_calls(function_name)
+
+            relationships[
                 function_name
-            )
+            ] = related_functions
 
             for callee in related_functions:
 
-                related_function = read_function(
-                    callee
-                )
+                related_function = read_function(callee)
 
                 if (
-                    related_function and
-                    related_function["function_name"] not in seen
+                    related_function
+                    and related_function["function_name"] not in seen
                 ):
 
-                    findings.append(
-                        related_function
-                    )
+                    findings.append(related_function)
 
-                    seen.add(
-                        related_function["function_name"]
-                    )
+                    seen.add(related_function["function_name"])
 
         print(
             [
@@ -69,17 +67,12 @@ class RepositoryExplorer:
                 for f in findings
             ]
         )
-        relationships = {}
-        related_functions = self.graph.get_calls(function_name)
 
-        relationships[
-            function_name
-        ] = related_functions
         return {
             "functions": findings,
             "sources": [
                 f["function_name"]
                 for f in findings
             ],
-            "relationships": relationships
+            "relationships": relationships,
         }
