@@ -1,86 +1,68 @@
-from app.core.gemini import GeminiClient
+from app.tools.function_tools import (
+    read_function,
+)
 
 
 class EntityExtractor:
-
-    def __init__(self):
-        self.gemini = GeminiClient()
 
     def extract(
         self,
         question: str,
     ):
 
-        prompt = f"""
-        You are an extraction engine.
+        q = question.strip()
 
-        Determine:
+        words = q.split()
 
-        1. Entity kind
-        2. Entity value
-        3. User intent
+        for word in words:
 
-        Return ONLY JSON.
+            function = read_function(
+                word
+            )
 
-        Examples:
+            if function:
 
-        Question:
-Explain Login
+                intent = self._detect_intent(
+                    q.lower()
+                )
 
-Output:
-{{"kind":"function","value":"Login","intent":"explain"}}
+                return {
+                    "kind": "function",
+                    "value": word,
+                    "intent": intent,
+                }
 
-Question:
-Trace Login
+        return {
+            "kind": "topic",
+            "value": q,
+            "intent": self._detect_intent(
+                q.lower()
+            ),
+        }
 
-Output:
-{{"kind":"function","value":"Login","intent":"trace"}}
+    def _detect_intent(
+        self,
+        question: str,
+    ):
 
-Question:
-How secure is authentication?
+        if "trace" in question:
 
-Output:
-{{"kind":"topic","value":"authentication","intent":"security"}}
+            return "trace"
 
-Question:
-How does authentication work?
+        if "explain" in question:
 
-Output:
-{{"kind":"topic","value":"authentication","intent":"architecture"}}
+            return "explain"
 
-Question:
-Compare Login and SignUp
+        if "security" in question:
 
-Output:
-{{"kind":"function","value":"Login","intent":"compare"}}
+            return "security"
 
-        Question:
-        {question}
-        """
+        if (
+            "architecture" in question
+            or "flow" in question
+            or "how does" in question
+        ):
 
-        response = self.gemini.generate(prompt)
-        print("Raw:", response)
+            return "architecture"
 
-        response = (
-            response
-            .replace("```json", "")
-            .replace("```", "")
-            .strip()
-        )
-
-        import json
-
-        try:
-            entity= json.loads(response)
-            if("kind" not in entity or
-               "value" not in entity
-               or "intent" not in entity):
-                raise ValueError("missing field")
-            return entity 
-        except Exception as e:
-            print("Entity parse error:", e)
-            return {
-                "kind":"topic",
-                "value": question,
-                "intent": "unknown",
-            }
+        return "rag"

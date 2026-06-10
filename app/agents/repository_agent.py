@@ -27,10 +27,17 @@ class RepositoryAgent:
         self,
         question: str,
     ):
+        import time 
+
+        start =time.time()
 
         entity = self.extractor.extract(question)
 
+        print("entity extract:",time.time()-start)
+        start = time.time()
+
         plan = self.planner.plan(question,entity,)
+        print("Planner:",time.time()-start)
 
         print(
             "Intent",
@@ -47,13 +54,15 @@ class RepositoryAgent:
             or question
         )
 
+        start = time.time()
         investigation = Investigation(
             question=question,
             target=target,
         )
+        print("Investigate:",time.time()-start)
 
         results = {}
-
+        start = time.time()
         for tool in plan["tools"]:
 
             result = self.executor.execute(
@@ -68,6 +77,9 @@ class RepositoryAgent:
 
                 results[tool] = result
 
+        print("Architecture:",time.time()-start)
+
+        start= time.time()
         answer = (
             self.synthesizer.synthesize(
                 question,
@@ -76,6 +88,7 @@ class RepositoryAgent:
                 investigation.evidence,
             )
         )
+        print("Synthesizer:",time.time()-start)
 
         return {
             "plan": plan,
