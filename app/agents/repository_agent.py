@@ -53,23 +53,28 @@ class RepositoryAgent:
 
                 results["trace"] = (investigation.trace)
 
+                investigation.add_note(f"Trace completed for {target}")
+
             elif tool == "explain":
 
                 investigation.explain = (explain_tool.explain(target))
 
                 results["explain"] = (investigation.explain)
+                investigation.add_note(f"Function Explanation generated for {target}")
 
             elif tool == "security_review":
 
                 investigation.security = (security_tool.review(target))
 
                 results["security_review"] = (investigation.security)
+                investigation.add_note(f"Security review completed for {target}")
 
             elif tool == "rag":
 
                 investigation.rag = (rag_tool.ask(question))
 
                 results["rag"] = (investigation.rag)
+                investigation.add_note(f"Rag question completed for {target}")
 
 
             elif tool == "architecture":
@@ -77,11 +82,13 @@ class RepositoryAgent:
                 investigation.architecture = (architecture_tool.review(target))
 
                 results["architecture"] = (investigation.architecture)
+                investigation.add_note(f"Architecture analyzed for {target}")
 
         answer = (
             self.synthesizer.synthesize(
                 question,
                 results,
+                investigation.notes,
             )
         )
 

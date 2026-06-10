@@ -11,6 +11,7 @@ class Synthesizer:
         self,
         question: str,
         results: dict,
+        notes: list[str] = None,
     ):
 
         context = ""
@@ -19,36 +20,47 @@ class Synthesizer:
 
             context += f"""
 
-        TOOL: {tool}
+TOOL:
+{tool}
 
-        RESULT:
-        {result}
+RESULT:
+{result}
 
-        ----------------
-        """
+------------------------
+"""
+
+        notes_text = ""
+
+        if notes:
+
+            notes_text = "\n".join(f"- {note}" for note in notes)
 
         prompt = f"""
-        You are a senior software architect.
+You are a senior software architect.
 
-        Question:
+Question:
 
-        {question}
+{question}
 
-        Tool Results:
+Investigation Notes:
 
-        {context}
+{notes_text}
 
-        Your task:
+Tool Results:
 
-        1. Review all tool outputs.
-        2. Identify agreements and contradictions.
-        3. Combine findings into a single answer.
-        4. Prioritize repository-specific evidence.
-        5. If a security issue exists, mention it.
-        6. If architectural concerns exist, mention them.
-        7. If information is insufficient, say so.
+{context}
 
-        Return a practical engineering answer.
-        """
+Your task:
+
+1. Review all findings.
+2. Identify important observations.
+3. Combine evidence from multiple tools.
+4. Mention security concerns if present.
+5. Mention architectural concerns if present.
+6. Use repository-specific evidence.
+7. If information is insufficient, say so.
+
+Return a practical engineering answer.
+"""
 
         return self.gemini.generate(prompt)
