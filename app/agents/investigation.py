@@ -18,6 +18,7 @@ class Investigation:
         self.rag = None
 
         self.findings = []
+        self.hypotheses = []
         self.notes = []
         self.evidence = Evidence()
 

@@ -2,41 +2,41 @@ class InvestigationEngine:
 
     def next_steps(
         self,
-        evidence,
+        hypotheses,
     ):
 
         steps = []
 
-        observations = (evidence.observations)
+        observations = (hypotheses.observations)
 
-        facts = [
-            item["fact"].lower()
-            for item in observations
+        texts = [
+            item["hypothesis"].lower()
+            for item in hypotheses
         ]
 
         if (
             "database dependency detected"
-            in facts
+            in texts
         ):
 
             steps.append(
                 {
                     "tool": "architecture",
                     "target": "database",
-                    "reason": "Investigate database dependency",
+                    "reason": "Validate database scalability hypothesis",
                 }
             )
 
         if (
             "cache-aside pattern detected"
-            in facts
+            in texts
         ):
 
             steps.append(
                 {
                     "tool": "architecture",
                     "target": "cache",
-                    "reason": "Investigate cache architecture",
+                    "reason": "Validate cache-aside pattern hypothesis",
                 }
             )
 

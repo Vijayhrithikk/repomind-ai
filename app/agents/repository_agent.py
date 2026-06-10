@@ -13,6 +13,8 @@ from app.services.investigation_engine import InvestigationEngine
 
 from app.services.evidence_fusion import EvidenceFusion
 
+from app.services.hypothesis_generator import HypothesisGenerator
+
 
 class RepositoryAgent:
 
@@ -29,6 +31,8 @@ class RepositoryAgent:
         self.investigation_engine = InvestigationEngine()
 
         self.fusion = EvidenceFusion()
+
+        self.hypothesis_generator = HypothesisGenerator()
 
     def run(
         self,
@@ -86,9 +90,13 @@ class RepositoryAgent:
 
         print("Architecture:",time.time()-start)
 
-        next_steps = self.investigation_engine.next_steps(investigation.evidence)
+        
 
         investigation.findings = self.fusion.fuse(investigation.evidence)
+
+        investigation.hypotheses = self.hypothesis_generator.generate(investigation.findings)
+
+        next_steps = self.investigation_engine.next_steps(investigation.hypotheses)
 
         start= time.time()
         answer = (
