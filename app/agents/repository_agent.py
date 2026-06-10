@@ -56,8 +56,11 @@ class RepositoryAgent:
             if tool == "trace":
 
                 investigation.trace = (trace_tool.deep_trace(target))
-                investigation.evidence.add_observation(f"Trace generated for {target}")
-                investigation.evidence.add_observation(f"Root function: {target}")
+
+                trace_data = investigation.trace
+            
+                self._collect_trace_observations(trace_data,investigation.evidence,)
+
                 investigation.evidence.add_unknown("Security properties not verified")
 
 
@@ -114,3 +117,24 @@ class RepositoryAgent:
                 "unknowns": (investigation.evidence.unknowns)
             }
         }
+
+
+    def _collect_trace_observations(
+            self,
+        tree: dict,
+        evidence,
+    ):
+        for caller, children in tree.items():
+
+            if isinstance(children, dict):
+
+                for callee in children.keys():
+
+                    evidence.add_observation(
+                        f"{caller} calls {callee}"
+                    )
+
+                    self._collect_trace_observations(
+                        {callee: children[callee]},
+                        evidence,
+                    )
