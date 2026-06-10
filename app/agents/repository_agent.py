@@ -105,6 +105,7 @@ class RepositoryAgent:
                 question,
                 results,
                 investigation.notes,
+                investigation.evidence,
             )
         )
 

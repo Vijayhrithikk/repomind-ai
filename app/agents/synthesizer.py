@@ -1,4 +1,5 @@
 from app.core.gemini import GeminiClient
+from app.agents.evidence import Evidence
 
 
 class Synthesizer:
@@ -11,9 +12,9 @@ class Synthesizer:
         self,
         question: str,
         results: dict,
-        notes: list[str] = None,
+        notes: list[str] | None = None,
+        evidence: Evidence | None = None,
     ):
-        available_tools = list(results.keys())
 
         context = ""
 
@@ -33,26 +34,32 @@ RESULT:
         notes_text = ""
 
         if notes:
+            notes_text = "\n".join(
+                f"- {note}"
+                for note in notes
+            )
 
-            notes_text = "\n".join(f"- {note}" for note in notes)
+        observations = []
+        unknowns = []
+
+        if evidence:
+            observations = evidence.observations
+            unknowns = evidence.unknowns
 
         prompt = f"""
 You are a senior software architect.
 
-Available Evidence:
-
-{available_tools}
-
-You may only make conclusions supported
-by the available tool results.
-
-If information is missing,
-explicitly say what additional tool
-or investigation would be required.
-
 Question:
 
 {question}
+
+Observed Facts:
+
+{observations}
+
+Unknowns:
+
+{unknowns}
 
 Investigation Notes:
 
@@ -62,19 +69,25 @@ Tool Results:
 
 {context}
 
-Your task:
+Rules:
 
-1. Review all findings.
-2. Identify important observations.
-3. Combine evidence from multiple tools.
-4. Mention security concerns if present.
-5. Mention architectural concerns if present.
-6. Use repository-specific evidence.
-7. If information is insufficient, say so.
+1. Clearly separate:
+   - Observed
+   - Inferred
+   - Unknown
 
+2. Never claim something was observed
+   unless it appears in Observed Facts.
 
+3. If evidence is insufficient,
+   explicitly say so.
+
+4. Use tool results only to support
+   observations and inferences.
 
 Return a practical engineering answer.
 """
 
-        return self.gemini.generate(prompt)
+        return self.gemini.generate(
+            prompt
+        )
