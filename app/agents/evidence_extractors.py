@@ -1,10 +1,10 @@
 def extract_trace_patterns(
-    observations: list[str],
+    observations
 ):
 
     semantic = []
 
-    text = " ".join(observations)
+    text = " ".join(observation["fact"] for observation in observations)
 
     if "CompareHashAndPassword" in text:
         semantic.append(

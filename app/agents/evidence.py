@@ -9,12 +9,14 @@ class Evidence:
         self,
         observation: str,
         source: str = "unknown",
+        confidence: float=1.0,
     ):
 
         self.observations.append(
             {
                 "fact": observation,
                 "source": source,
+                "confidence":1.0,
             }
         )
 

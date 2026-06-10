@@ -66,9 +66,9 @@ class RepositoryAgent:
 
                 for item in semantic:
 
-                    investigation.evidence.add_observation(item, source="trace")
+                    investigation.evidence.add_observation(item, source="trace", confidence=0.90)
 
-                investigation.evidence.add_unknown("Security properties not verified", source="trace",)
+                investigation.evidence.add_unknown("Security properties not verified", source="trace",confidence=0.0)
 
 
                 results["trace"] = (investigation.trace)
@@ -139,7 +139,9 @@ class RepositoryAgent:
                 for callee in children.keys():
 
                     evidence.add_observation(
-                        f"{caller} calls {callee}"
+                        f"{caller} calls {callee}",
+                        source="trace",
+                        confidence=1.0,
                     )
 
                     self._collect_trace_observations(
