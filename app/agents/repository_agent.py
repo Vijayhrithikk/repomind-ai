@@ -9,6 +9,7 @@ from app.agents.tools import (
     explain_tool,
     security_tool,
     rag_tool,
+    architecture_tool
 )
 
 
@@ -57,17 +58,13 @@ class RepositoryAgent:
             elif tool == "security_review":
                 
 
-                results["security_review"] = (
-                    security_tool.review(target)
-                )
+                results["security_review"] = (security_tool.review(target))
 
             elif tool == "rag":
 
-                results["rag"] = (
-                    rag_tool.ask(
-                        question
-                    )
-                )
+                results["rag"] = (rag_tool.ask(question))
+            elif tool == "architecture":
+                results["architecture"] = architecture_tool.review(target)
 
         answer = (
             self.synthesizer.synthesize(

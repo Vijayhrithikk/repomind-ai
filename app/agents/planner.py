@@ -16,6 +16,7 @@ class Planner:
         trace
         explain
         security_review
+        architecture
         rag
 
         Return ONLY valid JSON.
@@ -39,6 +40,30 @@ class Planner:
 
         Output:
         {{"tools":["explain"]}}
+
+        Question:
+        How does authentication work?
+
+        Output:
+        {{"tools":["architecture"]}}
+
+        Question:
+        Explain the authentication architecture
+
+        Output:
+        {{"tools":["architecture"]}}
+
+        Question:
+        What components are involved in URL creation?
+
+        Output:
+        {{"tools":["architecture"]}}
+
+        Question:
+        How secure is authentication?
+
+        Output:
+        {{"tools":["trace","explain","security_review"]}}
 
         Question:
         {question}
