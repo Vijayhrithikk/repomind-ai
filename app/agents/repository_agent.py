@@ -4,6 +4,7 @@ from app.agents.entity_extractor import (
     EntityExtractor,
 )
 from app.agents.investigation import Investigation
+from app.agents.evidence_extractors import extract_trace_patterns
 
 from app.agents.tools import (
     trace_tool,
@@ -60,6 +61,12 @@ class RepositoryAgent:
                 trace_data = investigation.trace
             
                 self._collect_trace_observations(trace_data,investigation.evidence,)
+
+                semantic = extract_trace_patterns(investigation.evidence.observations)
+
+                for item in semantic:
+
+                    investigation.evidence.add_observation(item)
 
                 investigation.evidence.add_unknown("Security properties not verified")
 
