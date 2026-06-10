@@ -3,6 +3,7 @@ from app.agents.synthesizer import Synthesizer
 from app.agents.entity_extractor import (
     EntityExtractor,
 )
+from app.agents.investigation import Investigation
 
 from app.agents.tools import (
     trace_tool,
@@ -41,7 +42,7 @@ class RepositoryAgent:
         
         target = (value if value else question)
 
-        from app.agents.investigation import Investigation
+        
     
         investigation = Investigation(
             question=question,
@@ -55,8 +56,9 @@ class RepositoryAgent:
             if tool == "trace":
 
                 investigation.trace = (trace_tool.deep_trace(target))
-                investigation.evidence.add_observation(f"Trace genrated for {target}")
+                investigation.evidence.add_observation(f"Trace generated for {target}")
                 investigation.evidence.add_observation(f"Root function: {target}")
+                investigation.evidence.add_unknown("Security properties not verified")
 
 
                 results["trace"] = (investigation.trace)
@@ -66,6 +68,7 @@ class RepositoryAgent:
             elif tool == "explain":
 
                 investigation.explain = (explain_tool.explain(target))
+                investigation.evidence.add_observation(f"Explanation generated for {target}")
 
                 results["explain"] = (investigation.explain)
                 investigation.add_note(f"Function Explanation generated for {target}")
@@ -73,6 +76,7 @@ class RepositoryAgent:
             elif tool == "security_review":
 
                 investigation.security = (security_tool.review(target))
+                investigation.evidence.add_observation(f"Security review executed for {target}")
 
                 results["security_review"] = (investigation.security)
                 investigation.add_note(f"Security review completed for {target}")
@@ -88,6 +92,7 @@ class RepositoryAgent:
             elif tool == "architecture":
 
                 investigation.architecture = (architecture_tool.review(target))
+                investigation.evidence.add_observation(f"Architecture review executed for {target}")
 
                 results["architecture"] = (investigation.architecture)
                 investigation.add_note(f"Architecture analyzed for {target}")
@@ -104,4 +109,8 @@ class RepositoryAgent:
             "plan": plan,
             "answer": answer,
             "tool_results": results,
+            "evidence": {
+                "observations": (investigation.evidence.observations),
+                "unknowns": (investigation.evidence.unknowns)
+            }
         }
