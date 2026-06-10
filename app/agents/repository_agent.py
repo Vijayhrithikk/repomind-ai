@@ -11,6 +11,8 @@ from app.agents.tool_executer import (
 )
 from app.services.investigation_engine import InvestigationEngine
 
+from app.services.evidence_fusion import EvidenceFusion
+
 
 class RepositoryAgent:
 
@@ -25,6 +27,8 @@ class RepositoryAgent:
         self.executor = ToolExecutor()
 
         self.investigation_engine = InvestigationEngine()
+
+        self.fusion = EvidenceFusion()
 
     def run(
         self,
@@ -84,6 +88,8 @@ class RepositoryAgent:
 
         next_steps = self.investigation_engine.next_steps(investigation.evidence)
 
+        investigation.findings = self.fusion.fuse(investigation.evidence)
+
         start= time.time()
         answer = (
             self.synthesizer.synthesize(
@@ -100,6 +106,7 @@ class RepositoryAgent:
             "answer": answer,
             "tool_results": results,
             "next_steps": next_steps,
+            "findings": investigation.findings,
             "evidence": {
                 "observations": (
                     investigation.evidence.observations
