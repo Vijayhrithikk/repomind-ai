@@ -28,6 +28,8 @@ class RepositoryAgent:
 
         self.executor = ToolExecutor()
 
+        self.tool_executor = ToolExecutor()
+
         self.investigation_engine = InvestigationEngine()
 
         self.fusion = EvidenceFusion()
