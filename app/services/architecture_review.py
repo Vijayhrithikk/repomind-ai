@@ -4,6 +4,7 @@ from app.services.repository_explorer import (
 from app.services.system_mapper import (
     SystemMapper,
 )
+from app.services.flow_analyzer import FlowAnalyzer
 
 
 class ArchitectureReviewService:
@@ -12,6 +13,7 @@ class ArchitectureReviewService:
 
         self.explorer = RepositoryExplorer()
         self.mapper = SystemMapper()
+        self.flow_analyzer = FlowAnalyzer()
 
     def review(
         self,
@@ -27,6 +29,8 @@ class ArchitectureReviewService:
         systems = self.mapper.map_systems(functions)
 
         relationships = (investigation["relationships"])
+
+        flows = self.flow_analyzer.analyze(relationships)
 
         layers = {
             "handlers": [],
