@@ -9,6 +9,7 @@ from app.agents.tools import (
     security_tool,
     rag_tool,
     architecture_tool,
+    scalability_tool
 )
 
 
@@ -107,6 +108,30 @@ class ToolExecutor:
             )
 
             return investigation.rag
+        
+        elif tool == "scalability_review":
+
+            investigation.scalability = (
+                scalability_tool.review(
+                    investigation.architecture
+                )
+            )
+
+            for finding in (
+                investigation.scalability
+            ):
+
+                investigation.evidence.add_observation(
+                    finding,
+                    source="scalability",
+                    confidence=0.85,
+                )
+
+            investigation.add_note(
+                f"Scalability review completed for {target}"
+            )
+
+            return investigation.scalability
 
         elif tool == "architecture":
 
@@ -118,10 +143,8 @@ class ToolExecutor:
             for pattern in patterns:
                 investigation.evidence.add_observation(pattern,source="architecture",confidence=0.90)
 
-            investigation.evidence.add_note(
-                f"Architecture review executed for {target}",
-                source="architecture",
-                confidence=1.0,
+            investigation.add_note(
+                f"Architecture review executed for {target}"
             )
 
             investigation.add_note(

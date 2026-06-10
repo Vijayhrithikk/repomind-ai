@@ -36,7 +36,8 @@ class Planner:
 
             return {
                 "tools": [
-                    "architecture"
+                    "architecture",
+                    "scalability_review",
                 ]
             }
 

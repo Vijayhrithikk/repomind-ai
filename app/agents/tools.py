@@ -27,3 +27,7 @@ security_tool = SecurityReviewService()
 rag_tool = RAGService()
 
 architecture_tool = ArchitectureReviewService()
+
+from app.services.scalability_review import ScalabilityReviewService
+
+scalability_tool = ScalabilityReviewService()

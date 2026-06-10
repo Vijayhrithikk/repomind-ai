@@ -13,6 +13,7 @@ class Investigation:
         self.explain = None
         self.architecture = None
         self.security = None
+        self.scalability = None
         self.rag = None
 
         self.notes = []
