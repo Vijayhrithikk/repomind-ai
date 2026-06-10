@@ -38,6 +38,7 @@ class Planner:
                 "tools": [
                     "architecture",
                     "scalability_review",
+                    "risk_review",
                 ]
             }
 

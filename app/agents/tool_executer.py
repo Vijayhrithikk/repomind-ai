@@ -9,7 +9,8 @@ from app.agents.tools import (
     security_tool,
     rag_tool,
     architecture_tool,
-    scalability_tool
+    scalability_tool,
+    risk_tool
 )
 
 
@@ -152,5 +153,27 @@ class ToolExecutor:
             )
 
             return investigation.architecture
+        
+        elif tool == "risk_review":
+            investigation.risks = (
+                risk_tool.analyze(
+                    investigation.architecture,
+                    investigation.scalability,
+                )
+            )
+
+            for risk in investigation.risks:
+
+                investigation.evidence.add_observation(
+                    risk,
+                    source="risk",
+                    confidence=0.85,
+                )
+
+            investigation.add_note(
+                f"Risk analysis completed for {target}"
+            )
+
+            return investigation.risks       
 
         return None
