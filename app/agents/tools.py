@@ -13,8 +13,8 @@ from app.services.security_review import (
 from app.services.rag_service import (
     RAGService,
 )
-from app.services.architecture import (
-    ArchitectureService,
+from app.services.architecture_review import (
+    ArchitectureReviewService,
 )
 
 
@@ -26,4 +26,4 @@ security_tool = SecurityReviewService()
 
 rag_tool = RAGService()
 
-architecture_tool = ArchitectureService()
+architecture_tool = ArchitectureReviewService()

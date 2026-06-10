@@ -1,0 +1,168 @@
+from app.services.repository_explorer import (
+    RepositoryExplorer,
+)
+from app.services.system_mapper import (
+    SystemMapper,
+)
+
+
+class ArchitectureReviewService:
+
+    def __init__(self):
+
+        self.explorer = RepositoryExplorer()
+        self.mapper = SystemMapper()
+
+    def review(
+        self,
+        target: str,
+    ):
+
+        investigation = (self.explorer.investigate(target))
+
+        functions = (investigation["functions"])
+        print(type(functions))
+        print(len(functions))
+
+        systems = self.mapper.map_systems(functions)
+
+        relationships = (investigation["relationships"])
+
+        layers = {
+            "handlers": [],
+            "services": [],
+            "repositories": [],
+        }
+
+        for function in functions:
+
+            path = (
+                function["file_path"]
+                .replace("\\", "/")
+                .lower()
+            )
+
+            if "/handlers/" in path:
+
+                layers["handlers"].append(function["function_name"])
+
+            elif "/services/" in path:
+
+                layers["services"].append(function["function_name"])
+
+            elif "/repositories/" in path:
+
+                layers["repositories"].append(function["function_name"])
+
+        entrypoints = (self._detect_entrypoints(functions))
+
+        flows = (self._detect_flows(relationships))
+
+        dependencies = (self._detect_dependencies(functions))
+
+        return {
+            "systems": systems,
+            "layers": layers,
+            "entrypoints": entrypoints,
+            "flows": flows,
+            "dependencies": dependencies,
+            "functions": functions,
+        }
+
+    def _detect_entrypoints(
+        self,
+        functions,
+    ):
+
+        entrypoints = []
+
+        for function in functions:
+
+            name = (
+                function["function_name"]
+            )
+
+            path = (
+                function["file_path"]
+                .replace("\\", "/")
+                .lower()
+            )
+
+            if (
+                "/handlers/" in path
+                or "handler" in name.lower()
+                or name == "main"
+            ):
+
+                entrypoints.append(
+                    name
+                )
+
+        return entrypoints
+
+    def _detect_flows(
+        self,
+        relationships,
+    ):
+
+        flows = []
+
+        for caller, callees in relationships.items():
+
+            if not callees:
+                continue
+
+            flows.append(
+                {
+                    "from": caller,
+                    "to": callees,
+                }
+            )
+
+        return flows
+
+    def _detect_dependencies(
+        self,
+        functions,
+    ):
+
+        dependencies = set()
+
+        for function in functions:
+
+            content = (
+                function["content"]
+                .lower()
+            )
+
+            if "jwt" in content:
+
+                dependencies.add(
+                    "JWT"
+                )
+
+            if "redis" in content:
+
+                dependencies.add(
+                    "Redis"
+                )
+
+            if "bcrypt" in content:
+
+                dependencies.add(
+                    "Bcrypt"
+                )
+
+            if (
+                "postgres" in content
+                or "pgx" in content
+                or "sql" in content
+            ):
+
+                dependencies.add(
+                    "PostgreSQL"
+                )
+
+        return list(
+            dependencies
+        )

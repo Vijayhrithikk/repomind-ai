@@ -1,5 +1,6 @@
 from app.agents.evidence_extractors import (
     extract_trace_patterns,
+    extract_architecture_patterns
 )
 
 from app.agents.tools import (
@@ -112,6 +113,10 @@ class ToolExecutor:
             investigation.architecture = (
                 architecture_tool.review(target)
             )
+            patterns = extract_architecture_patterns(investigation.architecture)
+
+            for pattern in patterns:
+                investigation.evidence.add_observation(pattern,source="architecture",confidence=0.90)
 
             investigation.evidence.add_observation(
                 f"Architecture review executed for {target}",
