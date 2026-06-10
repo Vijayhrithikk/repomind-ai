@@ -3,8 +3,8 @@ class Investigation:
     def __init__(
         self,
         question: str,
-        target: str,
-    ):
+        target: str,):
+        
         self.question = question
         self.target = target
 
@@ -16,6 +16,5 @@ class Investigation:
 
         self.notes = []
 
-        def add_note(self,note: str,):
-            
-            self.notes.append(note)
+    def add_note(self,note: str,):
+        self.notes.append(note)

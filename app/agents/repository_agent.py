@@ -27,9 +27,14 @@ class RepositoryAgent:
         question: str,
     ):
 
-        plan = self.planner.plan(question)
+        
 
         entity = self.extractor.extract(question)
+        plan = self.planner.plan(question,entity)
+
+        intent = entity.get("intent")
+        print("Intent",intent)
+
         kind = entity.get("kind")
         value = entity.get("value")
         print("Entity:", entity)

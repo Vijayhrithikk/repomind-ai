@@ -13,6 +13,7 @@ class Synthesizer:
         results: dict,
         notes: list[str] = None,
     ):
+        available_tools = list(results.keys())
 
         context = ""
 
@@ -38,6 +39,17 @@ RESULT:
         prompt = f"""
 You are a senior software architect.
 
+Available Evidence:
+
+{available_tools}
+
+You may only make conclusions supported
+by the available tool results.
+
+If information is missing,
+explicitly say what additional tool
+or investigation would be required.
+
 Question:
 
 {question}
@@ -59,6 +71,8 @@ Your task:
 5. Mention architectural concerns if present.
 6. Use repository-specific evidence.
 7. If information is insufficient, say so.
+
+
 
 Return a practical engineering answer.
 """

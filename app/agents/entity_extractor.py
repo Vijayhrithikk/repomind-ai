@@ -14,38 +14,45 @@ class EntityExtractor:
         prompt = f"""
         You are an extraction engine.
 
-        Determine whether the user is asking about:
+        Determine:
 
-        1. A Go function
-        2. A repository topic
+        1. Entity kind
+        2. Entity value
+        3. User intent
 
         Return ONLY JSON.
 
         Examples:
 
         Question:
-        Explain Login
+Explain Login
 
-        Output:
-        {{"kind":"function","value":"Login"}}
+Output:
+{{"kind":"function","value":"Login","intent":"explain"}}
 
-        Question:
-        Trace SignUp
+Question:
+Trace Login
 
-        Output:
-        {{"kind":"function","value":"SignUp"}}
+Output:
+{{"kind":"function","value":"Login","intent":"trace"}}
 
-        Question:
-        How secure is authentication?
+Question:
+How secure is authentication?
 
-        Output:
-        {{"kind":"topic","value":"authentication"}}
+Output:
+{{"kind":"topic","value":"authentication","intent":"security"}}
 
-        Question:
-        How does authorization work?
+Question:
+How does authentication work?
 
-        Output:
-        {{"kind":"topic","value":"authorization"}}
+Output:
+{{"kind":"topic","value":"authentication","intent":"architecture"}}
+
+Question:
+Compare Login and SignUp
+
+Output:
+{{"kind":"function","value":"Login","intent":"compare"}}
 
         Question:
         {question}
@@ -66,7 +73,8 @@ class EntityExtractor:
         try:
             entity= json.loads(response)
             if("kind" not in entity or
-               "value" not in entity):
+               "value" not in entity
+               or "intent" not in entity):
                 raise ValueError("missing field")
             return entity 
         except Exception as e:
@@ -74,4 +82,5 @@ class EntityExtractor:
             return {
                 "kind":"topic",
                 "value": question,
+                "intent": "unknown",
             }

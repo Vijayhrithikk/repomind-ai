@@ -7,7 +7,7 @@ class Planner:
     def __init__(self):
         self.gemini = GeminiClient()
 
-    def plan(self,question: str,):
+    def plan(self,question: str,entity: dict):
         prompt = f"""
         You are a repository agent planner.
 
