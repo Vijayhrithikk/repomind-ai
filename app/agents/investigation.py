@@ -10,6 +10,7 @@ class Investigation:
         self.target = target
 
         self.trace = None
+        self.risks = None
         self.explain = None
         self.architecture = None
         self.security = None
