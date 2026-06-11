@@ -19,6 +19,7 @@ class Investigation:
 
         self.findings = []
         self.hypotheses = []
+        self.refined_hypotheses = []
         self.notes = []
         self.evidence = Evidence()
 

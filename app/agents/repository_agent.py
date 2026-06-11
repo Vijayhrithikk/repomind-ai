@@ -15,6 +15,8 @@ from app.services.evidence_fusion import EvidenceFusion
 
 from app.services.hypothesis_generator import HypothesisGenerator
 
+from app.services.hypothesis_refiner import HypothesisRefiner
+
 
 class RepositoryAgent:
 
@@ -35,6 +37,8 @@ class RepositoryAgent:
         self.fusion = EvidenceFusion()
 
         self.hypothesis_generator = HypothesisGenerator()
+
+        self.hypothesis_refiner = HypothesisRefiner()
 
     def run(
         self,
@@ -119,7 +123,9 @@ class RepositoryAgent:
                     "step": first_step,
                     "result": result,
                 }
-            )        
+            )     
+
+        investigation.refined_hypotheses = self.hypothesis_refiner.refine(investigation.hypotheses,followups)   
 
         start= time.time()
         answer = (
@@ -140,6 +146,7 @@ class RepositoryAgent:
             "hypotheses": investigation.hypotheses,
             "followups": followups,
             "next_steps": next_steps,
+            "refined_hypotheses": investigation.refined_hypotheses,
             "evidence": {
                 "observations": (
                     investigation.evidence.observations

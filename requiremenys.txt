@@ -1,0 +1,8 @@
+gitpython
+tree-sitter tree-sitter-python
+tree-sitter-go
+sentence-transformers
+pgvector
+psycopg
+libpq
+psycopg[binary]
