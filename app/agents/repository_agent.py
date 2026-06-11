@@ -125,7 +125,9 @@ class RepositoryAgent:
                 }
             )     
 
-        investigation.refined_hypotheses = self.hypothesis_refiner.refine(investigation.hypotheses,followups)   
+        investigation.refined_hypotheses = self.hypothesis_refiner.refine(investigation.hypotheses,followups) 
+
+        second_round_steps = self.investigation_engine.next_steps(investigation.refined_hypotheses)  
 
         start= time.time()
         answer = (
@@ -147,6 +149,7 @@ class RepositoryAgent:
             "followups": followups,
             "next_steps": next_steps,
             "refined_hypotheses": investigation.refined_hypotheses,
+            "second_round_steps": second_round_steps,
             "evidence": {
                 "observations": (
                     investigation.evidence.observations
