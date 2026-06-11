@@ -128,6 +128,32 @@ class RepositoryAgent:
 
         investigation.refined_hypotheses = self.hypothesis_refiner.refine(investigation.hypotheses,followups) 
 
+        questions = []
+
+        for hypothesis in investigation.refined_hypotheses:
+
+            text = hypothesis["hypothesis"].lower()
+
+            if "redis" in text:
+
+                questions.append(
+                    "Can Redis outage affect redirect latency?"
+                )
+
+            if "cache" in text:
+
+                questions.append(
+                    "How is cache invalidation handled?"
+                )
+
+            if "analytics" in text:
+
+                questions.append(
+                    "Can analytics queue backlog impact performance?"
+                )
+
+        investigation.open_questions = questions
+
         second_round_steps = self.investigation_engine.next_steps(investigation.refined_hypotheses)  
 
         second_followups = []
@@ -175,6 +201,7 @@ class RepositoryAgent:
             "second_round_steps": second_round_steps,
             'second_followups': second_followups,
             "investigated_targets": list(investigation.investigated_targets),
+            "open_questions": investigation.open_questions,
             "evidence": {
                 "observations": (
                     investigation.evidence.observations
