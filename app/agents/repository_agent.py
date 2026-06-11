@@ -160,6 +160,32 @@ class RepositoryAgent:
 
         question_steps = self.question_planner.plan(investigation.open_questions)
 
+        question_followups = []
+
+        if question_steps:
+
+            first_step = question_steps[0]
+
+            result = self.tool_executor.execute(
+                tool=first_step["tool"],
+                target=first_step["target"],
+                question=question,
+                investigation=investigation,
+                collect_trace_observations=
+                self._collect_trace_observations,
+            )
+
+            question_followups.append(
+                {
+                    "step": first_step,
+                    "result": result,
+                }
+            )
+
+            investigation.investigated_targets.add(
+                first_step["target"]
+            )
+
         second_round_steps = self.investigation_engine.next_steps(investigation.refined_hypotheses)  
 
         second_followups = []
@@ -209,6 +235,7 @@ class RepositoryAgent:
             "investigated_targets": list(investigation.investigated_targets),
             "open_questions": investigation.open_questions,
             "question_steps": question_steps,
+            "question_followups": question_followups,
             "evidence": {
                 "observations": (
                     investigation.evidence.observations
