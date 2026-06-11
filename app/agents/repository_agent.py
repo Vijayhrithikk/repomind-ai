@@ -17,6 +17,8 @@ from app.services.hypothesis_generator import HypothesisGenerator
 
 from app.services.hypothesis_refiner import HypothesisRefiner
 
+from app.services.question_planner import QuestionPlanner
+
 
 class RepositoryAgent:
 
@@ -39,6 +41,8 @@ class RepositoryAgent:
         self.hypothesis_generator = HypothesisGenerator()
 
         self.hypothesis_refiner = HypothesisRefiner()
+
+        self.question_planner = QuestionPlanner()
 
     def run(
         self,
@@ -154,6 +158,8 @@ class RepositoryAgent:
 
         investigation.open_questions = questions
 
+        question_steps = self.question_planner.plan(investigation.open_questions)
+
         second_round_steps = self.investigation_engine.next_steps(investigation.refined_hypotheses)  
 
         second_followups = []
@@ -202,6 +208,7 @@ class RepositoryAgent:
             'second_followups': second_followups,
             "investigated_targets": list(investigation.investigated_targets),
             "open_questions": investigation.open_questions,
+            "question_steps": question_steps,
             "evidence": {
                 "observations": (
                     investigation.evidence.observations
