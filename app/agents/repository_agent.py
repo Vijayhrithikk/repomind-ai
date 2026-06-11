@@ -129,6 +129,27 @@ class RepositoryAgent:
 
         second_round_steps = self.investigation_engine.next_steps(investigation.refined_hypotheses)  
 
+        second_followups = []
+
+        if second_round_steps:
+
+            first_step = second_round_steps[0]
+
+            result = self.tool_executor.execute(
+                tool=first_step["tool"],
+                target=first_step["target"],
+                question=question,
+                investigation=investigation,
+                collect_trace_observations=self._collect_trace_observations,
+            )
+
+            second_followups.append(
+                {
+                    "step": first_step,
+                    "result": result,
+                }
+            )
+
         start= time.time()
         answer = (
             self.synthesizer.synthesize(
@@ -150,6 +171,7 @@ class RepositoryAgent:
             "next_steps": next_steps,
             "refined_hypotheses": investigation.refined_hypotheses,
             "second_round_steps": second_round_steps,
+            'second_followups': second_followups,
             "evidence": {
                 "observations": (
                     investigation.evidence.observations
