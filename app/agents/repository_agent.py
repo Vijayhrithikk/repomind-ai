@@ -117,6 +117,7 @@ class RepositoryAgent:
                 investigation=investigation,
                 collect_trace_observations=self._collect_trace_observations,
             )
+            investigation.investigated_targets.add(first_step["target"])
 
             followups.append(
                 {
@@ -142,6 +143,7 @@ class RepositoryAgent:
                 investigation=investigation,
                 collect_trace_observations=self._collect_trace_observations,
             )
+            investigation.investigated_targets.add(first_step["target"])
 
             second_followups.append(
                 {
@@ -172,6 +174,7 @@ class RepositoryAgent:
             "refined_hypotheses": investigation.refined_hypotheses,
             "second_round_steps": second_round_steps,
             'second_followups': second_followups,
+            "investigated_targets": list(investigation.investigated_targets),
             "evidence": {
                 "observations": (
                     investigation.evidence.observations

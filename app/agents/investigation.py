@@ -21,6 +21,7 @@ class Investigation:
         self.hypotheses = []
         self.refined_hypotheses = []
         self.notes = []
+        self.investigated_targets = set()
         self.evidence = Evidence()
 
     def add_note(self,note: str,):
